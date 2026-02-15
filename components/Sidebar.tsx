@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Bot, MessageSquare } from 'lucide-react';
+import { Zap, Bot, MessageSquare, FileSpreadsheet, Mail } from 'lucide-react';
 
 export default function Sidebar() {
     const onDragStart = (event: React.DragEvent, nodeType: string, nodeData: any) => {
@@ -59,6 +59,34 @@ export default function Sidebar() {
                     </div>
                     <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                         Discord Node
+                    </span>
+                </div>
+
+                {/* Google Sheets Node */}
+                <div
+                    className="flex items-center gap-3 p-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg cursor-grab hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors shadow-sm"
+                    onDragStart={(event) => onDragStart(event, 'googleSheets', { label: 'Sheet Append' })}
+                    draggable
+                >
+                    <div className="p-2 rounded bg-emerald-50 dark:bg-emerald-900/30 text-emerald-500">
+                        <FileSpreadsheet size={18} />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                        Sheet Append
+                    </span>
+                </div>
+
+                {/* Email Node */}
+                <div
+                    className="flex items-center gap-3 p-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg cursor-grab hover:border-amber-500 dark:hover:border-amber-500 transition-colors shadow-sm"
+                    onDragStart={(event) => onDragStart(event, 'email', { label: 'Email Sender' })}
+                    draggable
+                >
+                    <div className="p-2 rounded bg-amber-50 dark:bg-amber-900/30 text-amber-500">
+                        <Mail size={18} />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                        Email Sender
                     </span>
                 </div>
             </div>

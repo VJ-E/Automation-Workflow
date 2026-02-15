@@ -53,6 +53,8 @@ export default function NodeConfigPanel({ selectedNodeId, setNodes }: NodeConfig
     const isAIAgent = selectedNode.data.label === 'AI Agent' || selectedNode.data.label === 'AI Summarizer';
     const isWebhook = selectedNode.data.label === 'Webhook' || selectedNode.data.label === 'Webhook Listener';
     const isDiscord = selectedNode.type === 'discord' || selectedNode.data.label === 'Discord Node';
+    const isGoogleSheets = selectedNode.type === 'googleSheets' || selectedNode.data.label === 'Google Sheets' || selectedNode.data.label === 'Sheet Append';
+    const isEmail = selectedNode.type === 'email' || selectedNode.data.label === 'Email Sender';
 
     return (
         <div className="fixed right-0 top-0 h-full w-80 bg-white dark:bg-zinc-900 border-l border-slate-200 dark:border-zinc-800 shadow-xl p-4 z-50">
@@ -161,6 +163,88 @@ export default function NodeConfigPanel({ selectedNodeId, setNodes }: NodeConfig
                                 rows={6}
                                 className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white resize-none font-mono text-xs"
                                 placeholder='Hello World OR {"embeds": [...]}'
+                            />
+                        </div>
+                    </>
+                )}
+
+                {isGoogleSheets && (
+                    <>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                Spreadsheet ID
+                            </label>
+                            <input
+                                type="text"
+                                value={selectedNode.data.sheetId as string || ''}
+                                onChange={(e) => handleChange('sheetId', e.target.value)}
+                                placeholder="1BxiMVs0XRA5nFMdKbBdBKJ9..."
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                Range
+                            </label>
+                            <input
+                                type="text"
+                                value={selectedNode.data.range as string || 'Sheet1!A:A'}
+                                onChange={(e) => handleChange('range', e.target.value)}
+                                placeholder="Sheet1!A:A"
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                Values (Comma Separated)
+                            </label>
+                            <textarea
+                                value={selectedNode.data.values as string || ''}
+                                onChange={(e) => handleChange('values', e.target.value)}
+                                rows={4}
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white resize-none font-mono text-xs"
+                                placeholder='Value1, Value2, Value3'
+                            />
+                        </div>
+                    </>
+                )}
+
+                {isEmail && (
+                    <>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                To (Email Address)
+                            </label>
+                            <input
+                                type="text"
+                                value={selectedNode.data.emailTo as string || ''}
+                                onChange={(e) => handleChange('emailTo', e.target.value)}
+                                placeholder="recipient@example.com"
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                Subject
+                            </label>
+                            <input
+                                type="text"
+                                value={selectedNode.data.emailSubject as string || ''}
+                                onChange={(e) => handleChange('emailSubject', e.target.value)}
+                                placeholder="Notification"
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                Body (HTML or Text)
+                            </label>
+                            <textarea
+                                value={selectedNode.data.emailBody as string || ''}
+                                onChange={(e) => handleChange('emailBody', e.target.value)}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white resize-none"
+                                placeholder="Hello, this is an automated message."
                             />
                         </div>
                     </>
