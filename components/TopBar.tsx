@@ -11,7 +11,7 @@ export default function TopBar({ onRun, onSave, isRunning }: TopBarProps) {
     return (
         <div className="h-14 border-b border-slate-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-sm flex items-center justify-between px-4 fixed top-0 left-0 right-0 z-10 w-full">
             <div className="font-bold text-xl bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-                FlowLite
+                Automation WorkFlow
             </div>
 
             <div className="flex items-center gap-2">

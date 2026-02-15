@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Bot } from 'lucide-react';
+import { Zap, Bot, MessageSquare } from 'lucide-react';
 
 export default function Sidebar() {
     const onDragStart = (event: React.DragEvent, nodeType: string, nodeData: any) => {
@@ -45,6 +45,20 @@ export default function Sidebar() {
                     </div>
                     <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                         AI Agent
+                    </span>
+                </div>
+
+                {/* Discord Node */}
+                <div
+                    className="flex items-center gap-3 p-3 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg cursor-grab hover:border-[#5865F2] dark:hover:border-[#5865F2] transition-colors shadow-sm"
+                    onDragStart={(event) => onDragStart(event, 'discord', { label: 'Discord Node' })}
+                    draggable
+                >
+                    <div className="p-2 rounded bg-[#5865F2]/10 dark:bg-[#5865F2]/20 text-[#5865F2]">
+                        <MessageSquare size={18} />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                        Discord Node
                     </span>
                 </div>
             </div>

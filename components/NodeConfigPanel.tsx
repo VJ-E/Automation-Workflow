@@ -52,6 +52,7 @@ export default function NodeConfigPanel({ selectedNodeId, setNodes }: NodeConfig
 
     const isAIAgent = selectedNode.data.label === 'AI Agent' || selectedNode.data.label === 'AI Summarizer';
     const isWebhook = selectedNode.data.label === 'Webhook' || selectedNode.data.label === 'Webhook Listener';
+    const isDiscord = selectedNode.type === 'discord' || selectedNode.data.label === 'Discord Node';
 
     return (
         <div className="fixed right-0 top-0 h-full w-80 bg-white dark:bg-zinc-900 border-l border-slate-200 dark:border-zinc-800 shadow-xl p-4 z-50">
@@ -134,6 +135,35 @@ export default function NodeConfigPanel({ selectedNodeId, setNodes }: NodeConfig
                             className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white"
                         />
                     </div>
+                )}
+
+                {isDiscord && (
+                    <>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                Webhook URL
+                            </label>
+                            <input
+                                type="text"
+                                value={selectedNode.data.webhookUrl as string || ''}
+                                onChange={(e) => handleChange('webhookUrl', e.target.value)}
+                                placeholder="https://discord.com/api/webhooks/..."
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                Message Content (Text or JSON)
+                            </label>
+                            <textarea
+                                value={selectedNode.data.messageContent as string || ''}
+                                onChange={(e) => handleChange('messageContent', e.target.value)}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-slate-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-800 dark:text-white resize-none font-mono text-xs"
+                                placeholder='Hello World OR {"embeds": [...]}'
+                            />
+                        </div>
+                    </>
                 )}
             </div>
         </div>

@@ -92,6 +92,51 @@ export async function POST(req: Request) {
                     }
                     break;
 
+                case 'discord':
+                case 'Discord Node':
+                    try {
+                        logs.push(`Executing Discord Node`);
+                        const webhookUrl = currentNode.data.webhookUrl;
+                        let messageContent = currentNode.data.messageContent || contextData.summary || "No content provided";
+
+                        if (!webhookUrl) {
+                            throw new Error("Discord Webhook URL is missing");
+                        }
+
+                        let payload: any = { content: messageContent };
+
+                        // Check if messageContent is a JSON string for embeds
+                        try {
+                            if (typeof messageContent === 'string' && messageContent.trim().startsWith('{')) {
+                                const parsed = JSON.parse(messageContent);
+                                if (parsed.embeds || parsed.content) {
+                                    payload = parsed;
+                                }
+                            }
+                        } catch (e) {
+                            // Not JSON, use as plain text
+                        }
+
+                        logs.push(`Sending to Discord Webhook...`);
+
+                        const response = await fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Discord API responded with ${response.status}: ${response.statusText}`);
+                        }
+
+                        logs.push("Discord Message Sent Successfully");
+                    } catch (error: any) {
+                        console.error("Discord Execution Error:", error);
+                        logs.push(`Discord Execution Failed: ${error.message}`);
+                        contextData.error = error.message;
+                    }
+                    break;
+
                 default:
                     logs.push(`Executed ${currentNode.data.label} (No logic defined)`);
             }

@@ -16,6 +16,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { ProcessNode } from './nodes/ProcessNode';
+import { DiscordNode } from './nodes/DiscordNode';
 import Sidebar from './Sidebar';
 import NodeConfigPanel from './NodeConfigPanel';
 import TopBar from './TopBar';
@@ -24,6 +25,7 @@ import { useCallback, useRef, useState, useEffect } from 'react';
 
 const nodeTypes = {
     process: ProcessNode,
+    discord: DiscordNode,
 };
 
 const initialNodes: Node[] = [
