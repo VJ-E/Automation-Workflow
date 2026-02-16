@@ -170,9 +170,34 @@ function WorkflowEditorContent() {
         }
     }, [setNodes, setEdges]); // Ensure dependencies are correct
 
+    const handleClear = useCallback(() => {
+        if (confirm("Are you sure you want to clear the canvas?")) {
+            setNodes([]);
+            setEdges([]);
+        }
+    }, [setNodes, setEdges]);
+
+    const handleDelete = useCallback(() => {
+        // Delete selected nodes
+        const selectedNodes = nodes.filter(n => n.selected);
+        const selectedEdges = edges.filter(e => e.selected);
+
+        if (selectedNodes.length > 0 || selectedEdges.length > 0) {
+            setNodes(nds => nds.filter(n => !n.selected));
+            setEdges(eds => eds.filter(e => !e.selected));
+            setSelectedNodeId(null); // Clear selection state
+        }
+    }, [nodes, edges, setNodes, setEdges]);
+
     return (
         <div className="w-full h-screen flex flex-col bg-zinc-900 text-white relative">
-            <TopBar onRun={handleRun} onSave={handleSave} isRunning={isRunning} />
+            <TopBar
+                onRun={handleRun}
+                onSave={handleSave}
+                onDelete={handleDelete}
+                onClear={handleClear}
+                isRunning={isRunning}
+            />
             <div className="flex-1 flex overflow-hidden pt-14 pb-12">
                 <Sidebar />
                 <div className="flex-1 h-full relative" ref={reactFlowWrapper}>
