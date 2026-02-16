@@ -89,6 +89,20 @@ export default function Sidebar() {
                         Email Sender
                     </span>
                 </div>
+
+                {/* Gmail Trigger Node */}
+                <div
+                    className="flex items-center gap-3 p-3 bg-white dark:bg-zinc-900 border border-red-200 dark:border-red-900/30 rounded-lg cursor-grab hover:border-red-500 dark:hover:border-red-500 transition-colors shadow-sm"
+                    onDragStart={(event) => onDragStart(event, 'gmailTrigger', { label: 'Gmail Trigger' })}
+                    draggable
+                >
+                    <div className="p-2 rounded bg-red-50 dark:bg-red-900/30 text-red-500">
+                        <Mail size={18} />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                        Gmail Trigger
+                    </span>
+                </div>
             </div>
         </aside>
     );

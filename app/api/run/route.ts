@@ -31,13 +31,17 @@ export async function POST(req: Request) {
             adjacencyList.get(edge.source)?.push(edge.target);
         });
 
-        // 2. Find Start Node
+        // 2. Find Start Node - Support Multiple Trigger Types
         const startNode = (nodes as Node[]).find(
-            (n) => n.data.label === 'Webhook' || n.data.label === 'Webhook Listener'
+            (n) =>
+                n.data.label === 'Webhook' ||
+                n.data.label === 'Webhook Listener' ||
+                n.data.label === 'Gmail Trigger' ||
+                n.data.label === 'gmailTrigger'
         );
 
         if (!startNode) {
-            return NextResponse.json({ error: 'No Webhook Listener node found' }, { status: 400 });
+            return NextResponse.json({ error: 'No valid Trigger Node found (Webhook or Gmail Trigger)' }, { status: 400 });
         }
 
         // 3. Execution Loop (BFS/Queue)
@@ -88,8 +92,16 @@ export async function POST(req: Request) {
                         }
 
                         const systemPrompt = currentNode.data.systemPrompt || 'Summarize this text.';
-                        const emailBody = contextData.body || 'No input data provided.';
-                        const finalPrompt = `${systemPrompt}\n\nInput Data:\n${emailBody}`;
+
+                        // Concatenate previous node data
+                        let inputData = "";
+                        if (contextData.from) inputData += `From: ${contextData.from}\n`;
+                        if (contextData.subject) inputData += `Subject: ${contextData.subject}\n`;
+                        if (contextData.body) inputData += `Body:\n${contextData.body}\n`;
+
+                        if (!inputData) inputData = "No input data provided from previous nodes.";
+
+                        const finalPrompt = `${systemPrompt}\n\n--- Start of Input Data ---\n${inputData}\n--- End of Input Data ---`;
 
                         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
                         const result = await model.generateContent(finalPrompt);
@@ -268,6 +280,92 @@ export async function POST(req: Request) {
                     } catch (error: any) {
                         console.error("Email Execution Error:", error);
                         logs.push(`Email Execution Failed: ${error.message}`);
+                    }
+                    break;
+
+                case 'gmailTrigger':
+                case 'Gmail Trigger':
+                    try {
+                        logs.push(`Executing Gmail Trigger`);
+                        logs.push(`Connecting to Gmail IMAP...`);
+
+                        // Use existing EMAIL_USER/PASS from env
+                        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+                            throw new Error("Server Email Credentials (EMAIL_USER, EMAIL_PASS) are missing");
+                        }
+
+                        const imaps = require('imap-simple');
+                        const simpleParser = require('mailparser').simpleParser;
+
+                        const config = {
+                            imap: {
+                                user: process.env.EMAIL_USER,
+                                password: process.env.EMAIL_PASS,
+                                host: 'imap.gmail.com',
+                                port: 993,
+                                tls: true,
+                                tlsOptions: { rejectUnauthorized: false }, // Fix for self-signed certificate error
+                                authTimeout: 3000,
+                            },
+                        };
+
+                        let connection: any = null;
+                        try {
+                            connection = await imaps.connect(config);
+                            await connection.openBox('INBOX');
+
+                            const searchCriteria = ['UNSEEN'];
+                            const fetchOptions = {
+                                bodies: ['HEADER', 'TEXT'],
+                                markSeen: true,
+                            };
+
+                            const messages = await connection.search(searchCriteria, fetchOptions);
+
+                            if (messages.length === 0) {
+                                logs.push("No unread emails found.");
+                                contextData.body = "No email found";
+                                contextData.subject = "No Subject";
+                                contextData.from = "Unknown";
+                            } else {
+                                // Get the last message (newest)
+                                const latestMessage = messages[messages.length - 1];
+
+                                // We already fetched 'HEADER' and 'TEXT', so the data is in latestMessage.parts
+                                const allParts = latestMessage.parts;
+                                const headerPart = allParts.find((p: any) => p.which === 'HEADER');
+                                const textPart = allParts.find((p: any) => p.which === 'TEXT');
+
+                                const header = headerPart ? headerPart.body : '';
+                                const text = textPart ? textPart.body : '';
+
+                                // Combine to create a raw-like message for simpleParser
+                                const fullRawMessage = `${header}\r\n\r\n${text}`;
+
+                                // Parse the raw message
+                                const parsed = await simpleParser(fullRawMessage);
+
+                                // improved fallback for subject if parser fails (though parser should work on raw headers)
+                                const subjectFromParts = headerPart?.body?.subject?.[0];
+
+                                contextData.subject = parsed.subject || subjectFromParts || "No Subject";
+                                contextData.body = parsed.text || parsed.html || text || "No Content";
+                                contextData.from = parsed.from?.text || "Unknown";
+
+                                logs.push(`Fetched email: "${contextData.subject}" from ${contextData.from}`);
+                            }
+                        } finally {
+                            if (connection) {
+                                connection.end();
+                            }
+                        }
+
+                    } catch (error: any) {
+                        console.error("Gmail Trigger Error:", error);
+                        logs.push(`Gmail Trigger Failed: ${error.message}`);
+                        contextData.error = error.message;
+                        // Avoid crashing the flow, just provide fallback data
+                        contextData.body = "Error fetching email";
                     }
                     break;
 

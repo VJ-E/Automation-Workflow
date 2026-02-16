@@ -19,6 +19,7 @@ import { ProcessNode } from './nodes/ProcessNode';
 import { DiscordNode } from './nodes/DiscordNode';
 import { GoogleSheetsNode } from './nodes/GoogleSheetsNode';
 import { EmailNode } from './nodes/EmailNode';
+import { GmailTriggerNode } from './nodes/GmailTriggerNode';
 import Sidebar from './Sidebar';
 import NodeConfigPanel from './NodeConfigPanel';
 import TopBar from './TopBar';
@@ -30,6 +31,7 @@ const nodeTypes = {
     discord: DiscordNode,
     googleSheets: GoogleSheetsNode,
     email: EmailNode,
+    gmailTrigger: GmailTriggerNode,
 };
 
 const initialNodes: Node[] = [
