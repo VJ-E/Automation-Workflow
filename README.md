@@ -1,26 +1,59 @@
-# Automation WorkFlow: The Local-First AI Automation Engine
+# FlowLite - Automation Workflow Engine
 
-![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
-![Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white)
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React_Flow-FF0072?style=for-the-badge&logo=react&logoColor=white" alt="React Flow" />
+  <img src="https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google Gemini" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+</div>
 
-## The Why
+<br />
 
-Existing tools like n8n are powerful but heavy. **Automation WorkFlow** is designed for lightweight, stateless AI chaining. It eliminates the overhead of complex workflow engines while providing a robust environment for prototyping and executing AI-driven automation directly from your local environment.
+FlowLite is a powerful, AI-driven automation execution engine that allows users to build complex workflows visually. By connecting various nodes—triggers, AI processors, and integrations—users can automate repetitive tasks seamlessly.
 
-## Key Features
+![Project Preview](/public/preview.png)
 
-- **Visual DAG Editor**: Built on [React Flow](https://reactflow.dev/) for intuitive graph management and real-time visualization.
-- **Gemini 2.0 Integration**: Native support for Google's latest multimodal models (e.g., `gemini-2.5-flash-lite`) via the Google Generative AI SDK, enabling high-performance processing.
-- **Local-First Architecture**: Zero-database dependency. Workflows persist securely in `LocalStorage`, ensuring your data stays on your machine.
-- **Server-Side Execution**: Secure backend runtime using Next.js API Routes (`/api/run`) for processing sensitive logic away from the client.
+## Problem Statement
 
-## Quick Start
+In today's fast-paced digital environment, manual data transfer between services is inefficient and error-prone. This project provides a robust **automation tool** designed to orchestrate complex sequences of actions. It empowers users to define triggers (like receiving an email), process data intelligently using AI, and execute actions across external platforms (Discord, Google Sheets, Email) without writing a single line of code.
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Visual Editor:** React Flow (@xyflow/react)
+- **Styling:** Tailwind CSS
+- **AI Integration:** Google Gemini (Generative AI)
+- **Backend Logic:** Node.js (Next.js API Routes)
+- **Email Services:** Nodemailer (SMTP), Imap-Simple (IMAP)
+- **Google Integration:** Google Sheets API, Google Auth
+
+## Features
+
+- **Visual Workflow Builder:** Drag-and-drop interface to design automation flows.
+- **Gmail Trigger:** Automatically triggers workflows upon receiving new emails.
+- **AI Agent:** Uses Google Gemini to summarize, analyze, or transform text data.
+- **Discord Integration:** Sends formatted messages or JSON embeds to Discord webhooks.
+- **Google Sheets Integration:** Appends processed data directly to Google Sheets.
+- **Email Sender:** Sends automated emails via SMTP.
+- **Context Awareness:** Intelligent data passing between nodes (e.g., Email Body -> AI Summary -> Discord Message).
+- **Execution Logging:** Real-time logs and visual feedback for workflow runs.
+
+## Example Workflow
+
+**"Smart Email Assistant"**
+
+1.  **Gmail Trigger**: Detects a new unread email from a client.
+2.  **AI Summarizer**: Reads the email body and generates a concise summary using the Gemini model.
+3.  **Discord Node**: Posts the summary to a team channel for immediate visibility.
+4.  **Google Sheets Node**: Logs the sender, subject, and summary into a tracking spreadsheet for records.
+
+## How to Run
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/VJ-E/Automation-Workflow.git
-    cd Automation-Workflow
+    git clone https://github.com/your-username/flow-lite.git
+    cd flow-lite
     ```
 
 2.  **Install dependencies:**
@@ -28,26 +61,27 @@ Existing tools like n8n are powerful but heavy. **Automation WorkFlow** is desig
     npm install
     ```
 
-3.  **Configure Environment:**
-    Create a `.env.local` file in the root directory and add your Google Gemini API Key:
-    ```bash
-    echo "GEMINI_API_KEY=your_api_key_here" > .env.local
+3.  **Configure Environment Variables:**
+    Create a `.env.local` file in the root directory and add the following:
+    ```env
+    # Google Gemini API Key
+    GEMINI_API_KEY=your_gemini_api_key
+
+    # Google Cloud Service Account (for Sheets) - Path to JSON file is auto-detected as 'service-account.json'
+    # GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json (Optional if file exists in root)
+
+    # Email Credentials (for Gmail Trigger & Sender)
+    EMAIL_USER=your_gmail_address@gmail.com
+    EMAIL_PASS=your_app_password
     ```
 
-4.  **Launch the application:**
+4.  **Add Service Account Key:**
+    Place your Google Cloud service account JSON file in the root directory and exact name it `service-account.json`.
+
+5.  **Run the development server:**
     ```bash
     npm run dev
     ```
 
-## Architecture
-
-Automation WorkFlow operates on a decoupled execution model:
-
-1.  **Frontend (React Flow)**: Users design the DAG (Directed Acyclic Graph) visually. Nodes and edges store configuration and connectivity data.
-2.  **JSON Serialization**: Upon execution, the complete graph structure is serialized into a lightweight JSON payload.
-3.  **Backend Runner (Next.js API)**: The `/api/run` endpoint receives the JSON, reconstructs the graph, and executes nodes sequentially (or in parallel) using a server-side runtime.
-4.  **AI Integration**: The backend directly interfaces with the Google Gemini API, handling prompt engineering and response parsing before returning the final execution context to the frontend.
-
-## License
-
-MIT
+6.  **Open the app:**
+    Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
