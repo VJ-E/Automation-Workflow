@@ -1,4 +1,4 @@
-# FlowLite - Automation Workflow Engine
+# Automation Workflow - Automation Workflow Engine
 
 <div align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
@@ -10,7 +10,7 @@
 
 <br />
 
-FlowLite is a powerful, AI-driven automation execution engine that allows users to build complex workflows visually. By connecting various nodes—triggers, AI processors, and integrations—users can automate repetitive tasks seamlessly.
+Automation Workflow is a powerful, AI-driven automation execution engine that allows users to build complex workflows visually. By connecting various nodes—triggers, AI processors, and integrations—users can automate repetitive tasks seamlessly.
 
 ![Project Preview](/public/preview.png)
 
@@ -52,8 +52,8 @@ In today's fast-paced digital environment, manual data transfer between services
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/flow-lite.git
-    cd flow-lite
+    git clone https://github.com/VJ-E/Automation-Workflow.git
+    cd Automation-Workflow
     ```
 
 2.  **Install dependencies:**
